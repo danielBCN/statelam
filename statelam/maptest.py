@@ -56,6 +56,8 @@ def mapper_handler(event, context):
             'id': jobid,
             'redulamb': event['lredu']
         }
+        if event.has_key('nr'):
+            payload['nr'] = event['nr']
         lambdacli.invoke(FunctionName=shuffler,
                          Payload=json.dumps(payload),
                          InvocationType='Event')

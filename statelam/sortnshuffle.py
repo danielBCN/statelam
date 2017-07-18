@@ -16,6 +16,7 @@ def sorter_handler(event, context):
     jobid = event['id']
     redulamb = event['redulamb']
 
+    # flat the list
     allkeys = [tup for res in mapresul for tup in res]
 
     allkeys.sort()   # sort the key-value so can be grouped
@@ -27,11 +28,17 @@ def sorter_handler(event, context):
     print x
 
     # invoke reducers
-    nr = len(x)
+    nk = len(x)
+    nr = event['nr'] if event.has_key('nr') else nk
     for i in xrange(nr):
+        w = []
+        q = i
+        while q < nk:
+            w.append(x[q])
+            q += nr
         payload = {
-            'data': x[i],
-            'n': nr,
+            'data': w,
+            'n': nk,
             'id': jobid
         }
         lambdacli.invoke(FunctionName=redulamb,

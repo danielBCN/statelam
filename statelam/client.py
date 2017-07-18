@@ -123,7 +123,7 @@ class Executor(object):
     """
     Implements map-reduce to be executed on lambda.
     """
-    def mapreduce(self, mfunc, rfunc, values, pool_threads=32):
+    def mapreduce(self, mfunc, rfunc, values, nr=None, pool_threads=32):
         """
         mfunc: mapper lambda function
         rfunc: reducer lambda function
@@ -146,6 +146,8 @@ class Executor(object):
                 'lredu': rfunc
             }
             # print "invoking ", payload
+            if nr is not None:
+                payload['nr'] = nr
             lambdacli.invoke(FunctionName=mfunc,
                              Payload=json.dumps(payload),
                              InvocationType='Event')
